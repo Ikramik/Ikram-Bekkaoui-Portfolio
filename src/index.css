@@ -181,10 +181,13 @@ All colors MUST be HSL.
     overflow: hidden;
   }
 
+  /* FIXED: Add pointer-events: none to prevent blocking interaction */
   .tech-card::before {
     content: '';
     @apply absolute inset-0 opacity-0 transition-smooth;
     background: linear-gradient(135deg, hsl(var(--primary) / 0.05), hsl(var(--secondary) / 0.05));
+    pointer-events: none; /* ← THIS IS THE CRITICAL FIX */
+    z-index: -1; /* ← Ensure it stays behind content */
   }
 
   .tech-card:hover::before {
@@ -200,16 +203,16 @@ All colors MUST be HSL.
     background: var(--card);
     border-radius: 1rem;
   }
+}
 
-  .gradient-border::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 1rem;
-    padding: 2px;
-    background: var(--gradient-primary);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
+/* EMERGENCY FIX - Ensure form elements are always interactive */
+input, textarea, select, button {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Remove any potential blocking overlays */
+form * {
+  pointer-events: auto !important;
 }
